@@ -1,11 +1,10 @@
-#ifndef game_objects
-#define game_objects
-    
+
+// STRUCTS
 
 typedef struct card_tag {
     int num;
     char suit;
-    Card *next;
+    struct Card *next;
 } Card;
 
 
@@ -13,8 +12,8 @@ typedef struct card_tag {
 typedef struct player_tag {
     char *name; // this is going to be a string... Pointer to a char?
     char suit;
-    Card *top_card;
-    Player *next_player;
+    struct Card *top_card;
+    struct Player *next_player;
     int strikes; // this is how many times they have wrongly slapped the pile when they have NO cards. 3 and you're kicked!
     // how do i store a connection?? Do I even have to do that?
 } Player;
@@ -26,6 +25,17 @@ typedef struct game_tag {
     Player *current_player; 
 } Game;
 
+
+
+// FUNCTIONS
+
+Card *make_card(char given_suit, int given_num);
+void print_card(Card *);
+Card *make_decks(int num_decks);
+Player *make_player();
+
+
+
 // In the future, whenever there's a connection, I'll want to spawn a thread that communicates with that client.
 // The person will automatically be put into a lobby.
 // The first person will be the lobby leader.
@@ -35,4 +45,3 @@ typedef struct game_tag {
 // Everyone one will be sent thier "place" when the game is over and one person has all the cards, or when they have 3 strikes.
 
 
-#endif
