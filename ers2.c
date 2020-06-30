@@ -26,8 +26,24 @@ int main(){
     printf("Setting up the game for %d decks...\n", result);
 
     // Just do 1 deck for now.
-    Card *first_card = make_card('S', 14);
-    print_card(first_card);
+    // Game cards is a pointer to the first card in a linked list
+    Card *game_cards = make_card('S', 14);
+    print_card(game_cards);
 
+    // Just do 4 players for now
+    // curr_player is a pointer to a linked list of players.
+    Player *curr_player = make_players(4);
     
+    // Deal out the cards
+    deal_hands(game_cards, curr_player);
+
+    // Start the game loop
+    int winner = 0;
+    while(!winner){
+        // Wait for the user to press the up arrow, then:
+        Player *winning_player = play_round(curr_player);
+        curr_player = winning_player;
+        winner = check_for_winner();
+
+    }
 }
