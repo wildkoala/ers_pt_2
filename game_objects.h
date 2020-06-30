@@ -1,17 +1,20 @@
+#define BUFFER 200
+
 
 // STRUCTS
 
+// Maybe I should make cards doubly linked so that I can use it for checking for pairs and sandwhiches
 typedef struct card_tag {
     int num;
     char suit;
     struct Card *next;
+    struct Card *prev;
 } Card;
 
 
 // players will really be defined by their ip+port. So theoretically a person could play multiple games from the same IP. Important if players in same house, will only see 1 public IP.
 typedef struct player_tag {
-    char *name; // this is going to be a string... Pointer to a char?
-    char suit;
+    //char name[BUFFER]; // this is going to be a string... Pointer to a char?
     struct Card *top_card;
     struct Player *next_player;
     int strikes; // this is how many times they have wrongly slapped the pile when they have NO cards. 3 and you're kicked!
@@ -31,6 +34,8 @@ typedef struct game_tag {
 
 Card *make_card(char given_suit, int given_num);
 void print_card(Card *);
+void append_to_hand(Card *given, Card *hand);
+
 Card *make_decks(int num_decks);
 Player *make_player();
 
