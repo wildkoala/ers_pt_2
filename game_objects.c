@@ -29,28 +29,40 @@ Card *make_card(char given_suit, int given_num){
 Player *make_player(){
     Player *temp;
     temp = malloc(sizeof(Player));
-    //temp->name = {'T','E','S','T'}; // how do I save someone's name in here?
+    snprintf(temp->name,BUFFER,"DEFAULT");
     temp->top_card = NULL;
     temp->next_player = NULL;
+    temp->prev_player = NULL;
+    temp->strikes = 0;
     return temp;
 }
 
-void add_player(Player *given_player, Player *player_list){
-    Player *new_p = (Player *)given_player;
-    Player *p_list = (Player *)player_list;
-
-    if(p_list == NULL){
-        p_list = new_p;
-    }
-    else{
-        // go to the end and tack it on.
-        while(p_list->next_player != NULL){
-            p_list = (Player *)p_list->next_player;
+Player *make_players(int num_players){
+    int i;
+    Player *player_list = NULL;
+    for(i=0; i< num_players; i++){
+        Player *new_p = make_player();
+        if(player_list == NULL){
+            player_list = new_p;
         }
-        p_list->next_player = (Player *)new_p;
-        new_p->next_player = NULL;
+        else{
+            while(player_list->next_player != NULL){
+                player_list = player_list->next_player;
+            }
+            player_list->next_player = new_p;
+            new_p->prev_player = player_list;
+        }
     }
+    
+    while(player_list->prev_player != NULL){
+        player_list = player_list->prev_player;
+    }
+
+    return player_list;
+
 }
+
+
 
 void append_to_hand(Card *given, Card *hand){
     if (hand == NULL){
@@ -65,6 +77,22 @@ void append_to_hand(Card *given, Card *hand){
         hand->next = (Card *)given;
         given->prev = (Card *)hand;
         given->next = NULL;
+    }
+}
+
+Card *prepend_to_hand(Card *given, Card *hand){
+    if (hand == NULL){
+        // Just point the players hand to this card
+        hand = given;
+        hand->next = NULL;
+        hand->prev = NULL;
+        return hand;
+    }
+    else{
+        // Make the given the first card, and point it's next to the current hand's top card.
+        hand->prev = given;
+        given->next = hand;
+        return given;
     }
 }
 
@@ -99,29 +127,35 @@ void insert_to_hand(Card *given, Card *hand, int location){
 */
 
 Card *make_decks(int num_decks){
-    int i = 0;
-    Card *first_card;
-    for(num_decks; i < num_decks; i++){
+    int i;
+    Card *deck = NULL;
+    printf("About to start making cards:\n");
+    for(i=0; i < num_decks; i++){
         
         char suits[4] = {'S', 'H', 'D', 'C'};
         int suit_c;
         for(suit_c = 0; suit_c < 4; suit_c++){
             int card_num;
             for(card_num=2; card_num < 15; card_num++){
-                make_card(suits[suit_c], card_num);
+                Card *new_card;
+                new_card = make_card(suits[suit_c], card_num);
+                print_card(new_card);
+                deck = prepend_to_hand(new_card, deck);
             }
         }
     }
+    return deck;
 }
 
 void print_card(Card *given){
     printf("Card: %c %d\n", given->suit, given->num);
 }
 
-void print_deck(Card *given){
+void print_hand(Card *given){
+    printf("IN PRINT_HAND:\n");
     while(given != NULL){
         printf("Card: %c %d\n", given->suit, given->num);
-        print_deck(given->next);
+        print_hand(given->next);
     }
 }
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "game_objects.h"
+#include "round.h"
 
 
 #define BUFFER 200
@@ -26,16 +27,20 @@ int main(){
     printf("Setting up the game for %d decks...\n", result);
 
     // Just do 1 deck for now.
+    // Just print out all the cards to verify that it's working.
+    Card *game_cards = make_decks(1);
+    print_hand(game_cards);
+
     // Game cards is a pointer to the first card in a linked list
-    Card *game_cards = make_card('S', 14);
-    print_card(game_cards);
+    // Card *game_cards = make_card('S', 14);
+    // print_card(game_cards);
 
     // Just do 4 players for now
-    // curr_player is a pointer to a linked list of players.
+    // curr_player is a pointer to the player whose turn it is at the moment.
     Player *curr_player = make_players(4);
     
     // Deal out the cards
-    deal_hands(game_cards, curr_player);
+    //deal_hands(game_cards, curr_player);
 
     // Start the game loop
     int winner = 0;
@@ -43,7 +48,7 @@ int main(){
         // Wait for the user to press the up arrow, then:
         Player *winning_player = play_round(curr_player);
         curr_player = winning_player;
-        winner = check_for_winner();
+        //winner = check_for_winner();
 
     }
 }
